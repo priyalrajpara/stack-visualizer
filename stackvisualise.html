@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stack Visualizer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f1ff;
+            color: #263238;
+            margin: 30px;
+        }
+        main {
+            max-width: 600px;
+            margin: auto;
+            padding: 22px;
+            background: white;
+            border: 1px solid #d9d1ee;
+            border-radius: 10px;
+        }
+        h1 { color: #37176b; }
+        input, button {
+            padding: 10px;
+            margin: 3px;
+            font-size: 15px;
+            border: 1px solid #cdbfe9;
+            border-radius: 5px;
+        }
+        button { cursor: pointer; background: #f0e9ff; }
+        button:hover { background: #dccdf8; }
+        /* #push { background: #37176b; color: white; } */
+        #stackBox {
+            min-height: 170px;
+            margin-top: 16px;
+            padding: 12px;
+            /* border: 2px dashed #cdbfe9; */
+            border-width: 0px 2px 2px 2px;
+            border-style: dashed;
+            border-radius: 6px;
+            background: #faf7ff;
+        }
+        .item {
+            margin: 5px 0;
+            padding: 10px;
+            background: #b5a6cd;
+            border: 1px solid #d4b8d8;
+            border-radius: 4px;
+        }
+        #msg { min-height: 20px; color: #37176b; }
+        .info { color: #4c3571; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Stack Visualization</h1>
+        <p><b>LIFO</b>: Last In, First Out.</p>
+
+        <input id="value" type="text" placeholder="Enter a value">
+        <button id="push">Push</button>
+        <button id="pop">Pop</button>
+        <button id="peek">Peek</button>
+        <button id="clear">Clear</button>
+
+        <p class="info">capacity: 5 | size: <span id="size">0</span> | top index: <span id="top">-1</span></p>
+        <div id="stackBox"></div>
+        <p id="msg">Enter a value and press Push.</p>
+    </main>
+
+    <script>
+        let stack = [];
+        let max = 5;
+
+        let value = document.getElementById("value");
+        let box = document.getElementById("stackBox");
+        let msg = document.getElementById("msg");
+
+        function showStack() {
+            box.innerHTML = "";
+            document.getElementById("size").textContent = stack.length;
+            document.getElementById("top").textContent = stack.length - 1;
+
+            if (stack.length === 0) {
+                box.textContent = "The stack is empty";
+                return;
+            }
+
+            for (let i = stack.length - 1; i >= 0; i--) {
+                let item = document.createElement("div");
+                item.className = "item";
+                item.textContent = stack[i] + (i === stack.length - 1 ? "  <- TOP" : "");
+                box.appendChild(item);
+            }
+        }
+
+        function push() {
+            let val = value.value.trim();
+
+            if (val === "") {
+                msg.textContent = "Please enter a value.";
+            } else if (stack.length === max) {
+                msg.textContent = "Stack overflow! The stack is full.";
+            } else {
+                stack.push(val);
+                value.value = "";
+                msg.textContent = "Pushed " + val + " onto the stack.";
+                showStack();
+            }
+        }
+
+        function pop() {
+            if (stack.length === 0) {
+                msg.textContent = "Stack underflow! The stack is empty.";
+            } else {
+                let val = stack.pop();
+                msg.textContent = "Popped " + val + " from the stack.";
+                showStack();
+            }
+        }
+
+        function peek() {
+            if (stack.length === 0) {
+                msg.textContent = "The stack is empty.";
+            } else {
+                msg.textContent = "Top value is " + stack[stack.length - 1] + ".";
+            }
+        }
+
+        function clearStack() {
+            stack = [];
+            msg.textContent = "Stack cleared.";
+            showStack();
+        }
+
+        document.getElementById("push").onclick = push;
+        document.getElementById("pop").onclick = pop;
+        document.getElementById("peek").onclick = peek;
+        document.getElementById("clear").onclick = clearStack;
+
+        showStack();
+    </script>
+</body>
+</html>
